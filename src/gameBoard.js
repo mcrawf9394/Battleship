@@ -9,13 +9,23 @@ class nodes {
         this.left = null
         this.ship = false
         this.hit = false
+        this.shipType = null
     }
 }
 class gameBoard {
     constructor () {
         this.root = new nodes (0, 0)
         this.buildGameBoard()
-        this.pushShips()
+        this.carrier = new ships(5, true, "carrier")
+        this.randomCoordinate(this.carrier)
+        this.battleship = new ships(4, false, "battleship")
+        this.randomCoordinate(this.battleship)
+        this.cruiser = new ships(3, true, "cruiser")
+        this.randomCoordinate(this.cruiser)
+        this.submarine = new ships(3, false, "submarine")
+        this.randomCoordinate(this.submarine)
+        this.destroyer = new ships(2, true, "destroyer")
+        this.randomCoordinate(this.destroyer)
     }
     buildGameBoard () {
         let start = this.root
@@ -111,16 +121,12 @@ class gameBoard {
     }
     find (start) {
         let currentNode = this.root
-        let moveX = start[0]
-        let moveY = start[1]
         while (currentNode.xAxis != start[0] || currentNode.yAxis != start[1]) {
             if (start [0] != currentNode.xAxis) {
                 currentNode = currentNode.right
-                moveX = moveX - 1
             }
             if (start[1] != currentNode.yAxis) {
                 currentNode = currentNode.above
-                moveY = moveY - 1
             }
         }
         return currentNode
@@ -157,6 +163,7 @@ class gameBoard {
         }
         shipCoordinates.forEach(spot => {
             spot.ship = true
+            spot.shipType = newShip.shipType
         })
         console.log(shipCoordinates)
         return shipCoordinates
@@ -183,17 +190,43 @@ class gameBoard {
         let array = [x, y]
         this.placeShip(ship, array)
     }
-    pushShips () {
-       let carrier = new ships(5, true)
-       this.randomCoordinate(carrier)
-       let battleship = new ships(4, false)
-       this.randomCoordinate(battleship)
-       let cruiser = new ships(3, true)
-       this.randomCoordinate(cruiser)
-       let submarine = new ships(3, false)
-       this.randomCoordinate(submarine)
-       let destroyer = new ships(2, true)
-       this.randomCoordinate(destroyer) 
+    receiveAttack (array) {
+        let attackedSpot = this.find(array)
+        if (attackedSpot.ship === true) {
+            let shipType = attackedSpot.shipType
+            if(shipType === "carrier") {
+                this.carrier.hit()
+            }
+            else if (shipType === "battleship") {
+                this.battleship.hit()
+            }
+            else if (shipType === "cruiser") {
+                this.cruiser.hit()
+            }
+            else if (shipType === "submarine") {
+                this.submarine.hit()
+            }
+            else if (shipType === "destroyer") {
+                this.destroyer.hit()
+            }
+        }
+        this.checkLoss ()
+        attackedSpot.hit = true
+        if (attackedSpot.hit === true && attackedSpot.ship === true){
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    checkLoss () {
+        if (this.carrier.sunk === true && this.battleship === true && this.cruiser === true && this.submarine === true && this.destroyer === true) {
+            console.log("The other player has won!")
+            return true
+        }
+        else {
+            return false
+        }
     }
 }
 export default gameBoard
