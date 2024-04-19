@@ -60,6 +60,8 @@ const display = {
                         newBox.className += "shipHit"
                     }
                     else if (status === null) {
+                        newBox.name = "hit"
+                        newBox.className += "shipHit"
                         let messageContainer = document.getElementById('finalMessage')
                         let message = document.createElement('h2')
                         message.textContent = "You have won"

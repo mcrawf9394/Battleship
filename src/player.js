@@ -4,7 +4,7 @@ const realPlayer = {
     playerGameBoard: new gameBoard,
     attack (array) {
         let spot = computerPlayer.playerGameBoard.receiveAttack(array)
-        if (spot === null) {
+        if (spot === true) {
             return null
         }
         if (spot.hit === true && spot.ship === false) {
