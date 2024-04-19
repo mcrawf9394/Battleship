@@ -29,9 +29,9 @@ class gameBoard {
     }
     buildGameBoard () {
         let start = this.root
-        while (start.xAxis <= 10) {
+        while (start.xAxis <= 9) {
             if (start.xAxis % 2 === 0) {
-                while (start.yAxis < 10) {
+                while (start.yAxis < 9) {
                     let newY = start.yAxis + 1
                     let prevNode = start
                     start = new nodes(start.xAxis, newY)
@@ -51,14 +51,14 @@ class gameBoard {
             let newX = start.xAxis + 1
             let prevNode = start
             start =  new nodes (newX, start.yAxis)
-            if (start.xAxis === 11){
+            if (start.xAxis === 10){
                 break
             }
             prevNode.right = start
             start.left = prevNode
         }
         start = this.root
-        while (start.xAxis <= 10) {
+        while (start.xAxis <= 9) {
             let currentNode
             if (start.xAxis % 2 != 0) {
                 if (start.yAxis === 0) {
@@ -69,7 +69,7 @@ class gameBoard {
                 }
             }
             else {
-                if (start.yAxis === 10) {
+                if (start.yAxis === 9) {
                     currentNode = start.right
                 }
                 else {
@@ -78,11 +78,11 @@ class gameBoard {
             }
             while (currentNode.xAxis != (start.xAxis + 1)) {
                 while(currentNode.yAxis != start.yAxis) {
-                    if (start.xAxis === 10) {
+                    if (start.xAxis === 9) {
                         return
                     }
                     if (currentNode.xAxis % 2 === 0) {
-                        if (currentNode.yAxis != 10) {
+                        if (currentNode.yAxis != 9) {
                             currentNode = currentNode.above
                         }
                         else {
@@ -102,7 +102,7 @@ class gameBoard {
             currentNode.left = start
             start.right = currentNode
             if (start.xAxis %2 === 0) {
-                if (start.yAxis != 10) {
+                if (start.yAxis != 9) {
                     start = start.above
                 }
                 else {
@@ -176,7 +176,7 @@ class gameBoard {
             x = Math.floor(Math.random()*10)
             y = Math.floor(Math.random()*10)
             if (ship.horizontal === true) {
-                if ((x + ship.length) < 11) {
+                if ((x + ship.length) < 10) {
                     i = 1
                 }
             }
@@ -210,17 +210,15 @@ class gameBoard {
                 this.destroyer.hit()
             }
         }
-        this.checkLoss ()
-        attackedSpot.hit = true
-        if (attackedSpot.hit === true && attackedSpot.ship === true){
+        let loss = this.checkLoss ()
+        if (loss === true) {
             return true
         }
-        else {
-            return false
-        }
+        attackedSpot.hit = true
+        return attackedSpot
     }
     checkLoss () {
-        if (this.carrier.sunk === true && this.battleship === true && this.cruiser === true && this.submarine === true && this.destroyer === true) {
+        if (this.carrier.sunk === true && this.battleship.sunk === true && this.cruiser.sunk === true && this.submarine.sunk === true && this.destroyer.sunk === true) {
             console.log("The other player has won!")
             return true
         }

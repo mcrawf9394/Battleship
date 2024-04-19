@@ -18,3 +18,7 @@ test('making sure that ships cannot overlap', () => {
 test('making sure that ships also present as horizontal', () => {
     expect(placeShip(secondShip, [7,1], root)).toEqual([[7,1], [8,1],[9,1]])
 })
+const computerPlayer = require('./testPlayer')
+test('', () => {
+    expect().toBe()
+})

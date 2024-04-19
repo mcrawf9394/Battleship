@@ -7,3 +7,30 @@ html {
 h1 {
     text-align: center;
 }
+:disabled {
+    background-color: grey;
+}
+#centerOfPage {
+    display: inline-flex;
+    margin-top: 10%;
+    width: 100%;
+    height: 70vh;
+}
+#player1, #player2 {
+    display: grid;
+    margin-left: 10%;
+    margin-right: 10%;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns:  repeat(10, 1fr);
+    width: 30%;
+    height: 65%;
+}
+button[name=ship] {
+    background-color: green;
+}
+.gridCellsshipHit {
+    background-color: red;
+}
+.gridCellsmiss {
+    background-color: aqua;
+}
