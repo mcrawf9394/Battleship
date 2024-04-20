@@ -18,7 +18,46 @@ test('making sure that ships cannot overlap', () => {
 test('making sure that ships also present as horizontal', () => {
     expect(placeShip(secondShip, [7,1], root)).toEqual([[7,1], [8,1],[9,1]])
 })
-const computerPlayer = require('./testPlayer')
-test('', () => {
-    expect().toBe()
+const betterComputer = require('./testPlayer')
+lastCoordinates = {
+    ship: true,
+    hit: true,
+    above: {
+        ship:true,
+        hit:true
+    },
+    below: {
+        ship: true,
+        hit: false
+    }
+}
+previousCoordinates = {
+    ship: true,
+    hit: true,
+    above: {
+        ship: false,
+        hit: false
+    },  
+    below: {
+        ship: false,
+        hit: false
+    },
+    left: {
+        ship: true,
+        hit: false,
+        left: {
+            ship: true,
+            hit: false
+        }
+    },
+    right: {
+        ship: true,
+        hit: false
+    }
+}
+test('Checking the computer to see if it can play more realistically, this should hit below recognizing that the two above have been hit', () => {
+    expect(betterComputer(lastCoordinates)).toBe(true)
+})
+test('Checking to see if the computer can hit around a target until it finds where the other part of the ship is', () => {
+    expect(betterComputer(previousCoordinates)).toBe(true)
 })
