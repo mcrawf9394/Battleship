@@ -200,7 +200,7 @@ const computerPlayer  = {
                 spot = lastAttack.right
             }
         }
-        else {
+        else if (spot === null || spot === undefined){
             spot = realPlayer.playerGameBoard.find(this.attackNear())
         }
         x = spot.xAxis

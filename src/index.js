@@ -1,8 +1,6 @@
 import './style.css';
 import { realPlayer } from './player';
 import { computerPlayer } from './player';
-import gameBoard from './gameBoard';
-
 const display = {
     dialog () {
         let dialog = document.getElementById('player1Dialog')
@@ -94,8 +92,5 @@ const display = {
         }
         return
     }
-}
-const backSideGame = {
-
 }
 display.dialog()
