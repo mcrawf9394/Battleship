@@ -19,245 +19,194 @@ const realPlayer = {
 const computerPlayer  = {
     playerGameBoard: new gameBoard,
     attacks: [],
-    attacksSpot: [],
+    attacksShip: [],
     attack () {
-        function hitTargets (newTarget) {
-            if (newTarget.hit === false) {
-                newTarget.hit = true
-                if (newTarget.ship === false) {
-                    return "miss"
-                }
-                else {
-                    return "hit"
-                }
+        let newattack
+        let spot
+        if (this.attacks.length === 0 || this.attacksShip.length === 0) {
+            newattack = this.randomAttack()
+            while (realPlayer.playerGameBoard.find(newattack).hit === true) {
+                newattack = this.randomAttack()
             }
-            else {
-                return "find different spot"
-            }
+            spot = realPlayer.playerGameBoard.find(newattack)
         }
-        function handleShot (response, array) {
-            if (response === "miss") {
-                let newArray = [0]
-                let finalArray = newArray.concat(array)
-                return finalArray
-            }
-            else if (response === "hit") {
-                let newArray = [1]
-                let finalArray = newArray.concat(array)
-                return finalArray
-            }
-            else {
-
-            }
+        else if (this.attacksShip.length === 1) {
+            newattack = this.attackNear()
+            spot = realPlayer.playerGameBoard.find(newattack)
         }
-        function getCoordinates () {
-            let x = Math.floor(Math.random()*10)
-            let y = Math.floor(Math.random()*10)
-            let array = [x, y]
-            return array
+        else if (this.attacksShip.length <= this.attacksShip[0].shipType.length) {
+            newattack = this.followAttacks()
+            spot = realPlayer.playerGameBoard.find(newattack)
         }
-        let response
-        let array
-        let target
-        if (this.attacksSpot.length > 1 && this.attacksSpot[this.attacksSpot.length - 1].hit === false && this.attacksSpot[this.attacksSpot.length - 2].ship === true) {
-            let targetClose = this.attacksSpot[this.attacksSpot.length - 2]
-            if (targetClose.above.hit === true && targetClose.above.ship === true) {
-                while (targetClose != null && targetClose.above.hit === true) {
-                    targetClose = targetClose.above
-                }
-                if (targetClose.above != null) {
-                    target = targetClose.above
-                    response = hitTargets(target)
-                    array = [target.xAxis, target.yAxis]
-                }
-                else {
-                    targetClose = this.attacksSpot[this.attacksSpot.length - 2]
-                }
+        let newArray
+        if (spot === undefined || spot.hit === true) {
+            newattack = this.randomAttack()
+            while (realPlayer.playerGameBoard.find(newattack).hit === true) {
+                newattack = this.randomAttack()
             }
-            else if (targetClose.below.hit === true && targetClose.below.ship === true) {
-                while (targetClose != null && targetClose.below.hit === true) {
-                    targetClose = targetClose.below
-                }
-                if (targetClose.below != null) {
-                    target = targetClose.above
-                    response = hitTargets(target)
-                    array = [target.xAxis, target.yAxis]
-                }
-                else {
-                    targetClose = this.attacksSpot[this.attacksSpot.length - 2]
-                }
-            }
-            else if (targetClose.left.hit === true && targetClose.left.ship === true) {
-                while (targetClose != null && targetClose.left.hit === true) {
-                    targetClose = targetClose.left
-                }
-                if (targetClose.left != null) {
-                    target = targetClose.left
-                    response = hitTargets(target)
-                    array = [target.xAxis, target.yAxis]
-                }
-                else {
-                    targetClose = this.attacksSpot[this.attacksSpot.length - 2]
-                }
-            }
-            else if (targetClose.right.hit === true && targetClose.right.ship === true) {
-                while (targetClose != null && targetClose.right.hit === true) {
-                    targetClose = targetClose.right
-                }
-                if (targetClose.right != null) {
-                    target = targetClose.right
-                    response = hitTargets(target)
-                    array = [target.xAxis, target.yAxis]
-                }
-                else {
-                    targetClose = this.attacksSpot[this.attacksSpot.length - 2]
-                }
-            }
-            else {
-                let spot = null
-                let choices = ["above", "below", "left", "right"]
-                while (spot === null && choices.length > 0) {
-                    let ran = Math.floor(Math.random()*choices.length)
-                    let choice = choices[ran]
-                    if (choice === "above"  && this.attacksSpot[this.attacksSpot.length - 2].above != null && this.attacksSpot[this.attacksSpot.length - 2].above.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 2].above
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else if (choice === "below" && this.attacksSpot[this.attacksSpot.length - 2].below != null && this.attacksSpot[this.attacksSpot.length - 2].below.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 2].below
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else if (choice === "left" && this.attacksSpot[this.attacksSpot.length - 2].left != null && this.attacksSpot[this.attacksSpot.length - 2].left.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 2].left
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else if (choice === "right" && this.attacksSpot[this.attacksSpot.length - 2].right != null && this.attacksSpot[this.attacksSpot.length - 2].left.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 2].right
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else {
-                        choices.splice(ran, 1)
-                    }
-                }
-                if (spot === null) {
-                    array = getCoordinates()
-                    while (realPlayer.playerGameBoard.find(array).hit === true){
-                        array = getCoordinates()
-                    }
-                    spot = realPlayer.playerGameBoard.find(array)
-                    target = spot
-                    response = hitTargets(spot)
-                }
-            }
-            target.hit = true
-            this.attacksSpot.push(target)
-            let finalArray =  handleShot(response, array)
-            console.log(finalArray)
+            spot = realPlayer.playerGameBoard.find(newattack)
+        }
+        spot.hit = true
+        if (realPlayer.playerGameBoard.checkLoss() === true) {
+            newArray = [true]
+            let finalArray = newArray.concat(newattack)
             return finalArray
         }
-        if (this.attacksSpot.length > 1 && this.attacksSpot[this.attacksSpot.length - 1].hit === true && this.attacksSpot[this.attacksSpot.length - 1].ship === true) {
-            if (this.attacksSpot[this.attacksSpot.length - 1].above != null && this.attacksSpot[this.attacksSpot.length - 1].above.hit === true && this.attacksSpot[this.attacksSpot.length - 1].above.ship === true && this.attacksSpot[this.attacksSpot.length - 1].below != null && this.attacksSpot[this.attacksSpot.length - 1].below.hit === false) {
-                target = this.attacksSpot[this.attacksSpot.length - 1].below
-                response = hitTargets(this.attacksSpot[this.attacksSpot.length - 1].below)
-                array = [this.attacksSpot[this.attacksSpot.length - 1].below.xAxis, this.attacksSpot[this.attacksSpot.length - 1].below.yAxis]
-            }
-            else if (this.attacksSpot[this.attacksSpot.length - 1].below != null && this.attacksSpot[this.attacksSpot.length - 1].below.hit === true && this.attacksSpot[this.attacksSpot.length - 1].below.ship === true && this.attacksSpot[this.attacksSpot.length - 1].above != null && this.attacksSpot[this.attacksSpot.length - 1].above.hit === false) {
-                target = this.attacksSpot[this.attacksSpot.length - 1].above
-                response = hitTargets(this.attacksSpot[this.attacksSpot.length - 1].above)
-                array = [this.attacksSpot[this.attacksSpot.length - 1].above.xAxis, this.attacksSpot[this.attacksSpot.length - 1].above.yAxis]
-            }
-            else if (this.attacksSpot[this.attacksSpot.length - 1].left != null && this.attacksSpot[this.attacksSpot.length - 1].left.hit === true && this.attacksSpot[this.attacksSpot.length - 1].left.ship === true && this.attacksSpot[this.attacksSpot.length - 1].right != null && this.attacksSpot[this.attacksSpot.length - 1].right.hit === false) {
-                target = this.attacksSpot[this.attacksSpot.length - 1].right
-                response = hitTargets(this.attacksSpot[this.attacksSpot.length - 1].right)
-                array = [this.attacksSpot[this.attacksSpot.length - 1].right.xAxis, this.attacksSpot[this.attacksSpot.length - 1].right.yAxis]
-            }
-            else if (this.attacksSpot[this.attacksSpot.length - 1].right != null && this.attacksSpot[this.attacksSpot.length - 1].right.hit === true && this.attacksSpot[this.attacksSpot.length - 1].right.ship === true && this.attacksSpot[this.attacksSpot.length - 1].left != null && this.attacksSpot[this.attacksSpot.length - 1].left.hit === false){
-                target = this.attacksSpot[this.attacksSpot.length - 1].left
-                response = hitTargets(this.attacksSpot[this.attacksSpot.length - 1].left)
-                array = [this.attacksSpot[this.attacksSpot.length - 1].left.xAxis, this.attacksSpot[this.attacksSpot.length - 1].left.yAxis]
-            }
-            else {
-                let spot = null
-                let choices = ["above", "below", "left", "right"]
-                while (spot === null && choices.length > 0) {
-                    let ran = Math.floor(Math.random()*choices.length)
-                    let choice = choices[ran]
-                    if (choice === "above"  && this.attacksSpot[this.attacksSpot.length - 1].above != null && this.attacksSpot[this.attacksSpot.length - 1].above.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 1].above
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else if (choice === "below" && this.attacksSpot[this.attacksSpot.length - 1].below != null && this.attacksSpot[this.attacksSpot.length - 1].below.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 1].below
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else if (choice === "left" && this.attacksSpot[this.attacksSpot.length - 1].left != null && this.attacksSpot[this.attacksSpot.length - 1].left.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 1].left
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else if (choice === "right" && this.attacksSpot[this.attacksSpot.length - 1].right != null && this.attacksSpot[this.attacksSpot.length - 1].left.hit === false) {
-                        target = this.attacksSpot[this.attacksSpot.length - 1].right
-                        spot = target
-                        response = hitTargets(target)
-                        array = [target.xAxis, target.yAxis]
-                    }
-                    else {
-                        choices.splice(ran, 1)
-                    }
+        if (spot.ship === true) {
+            let i = 0
+            this.attacksShip.forEach(ship => {
+                if (ship.shipType != this.attacksShip[this.attacksShip.length -1].shipType) {
+                    this.attacksShip.splice(i, 1)
                 }
-                if (spot === null) {
-                    array = getCoordinates()
-                    while (realPlayer.playerGameBoard.find(array).hit === true){
-                        array = getCoordinates()
-                    }
-                    spot = realPlayer.playerGameBoard.find(array)
-                    target = spot
-                    response = hitTargets(spot)
-                }   
+                i++
+            })
+            this.attacksShip.push(spot)
+            if (this.attacksShip.length === this.attacksShip[0].shipType.length) {
+                while (this.attacksShip.length > 0) {
+                    this.attacksShip.pop()
+                }
             }
-            target.hit = true
-            this.attacksSpot.push(target)
-            let finalArray =  handleShot(response, array)
-            console.log(finalArray)
-            return finalArray
+        }
+        this.attacks.push(spot)
+        if (spot.hit === true && spot.ship === false) {
+            newArray = [0]
         }
         else {
-            let array = getCoordinates()
-            while (realPlayer.playerGameBoard.find(array).hit === true){
-                array = getCoordinates()
+            newArray = [1]
+        }
+        let finalArray = newArray.concat(newattack)
+        console.log(this.attacksShip)
+        return finalArray
+    },
+    randomAttack () {
+        let x = Math.floor(Math.random()*10)
+        let y = Math.floor(Math.random()*10)
+        let array = [x, y]
+        return array
+    },
+    attackNear () {
+        let i = 0
+        let directionArray = ["above", "below", "right", "left"]
+        let newattack = this.attacksShip[0]
+        while (newattack.hit === true && directionArray.length > 0 && i < 4) {
+            newattack = this.attacksShip[0]
+            let random = Math.floor(Math.random()*directionArray.length)
+            let newDirection = directionArray[random]
+            i = i +1
+            if (newDirection === "above" && newattack.above != null) {
+                newattack = newattack.above
             }
-            let spot = realPlayer.playerGameBoard.receiveAttack(array)
-            if (spot === true) {
-                let newArray = [true]
-                let finalArray = newArray.concat(array)
-                return finalArray
+            else if (newDirection === "below" && newattack.below != null) {
+                newattack = newattack.below
             }
-            this.attacksSpot.push(spot)
-            this.attacks.push(array)
-            if (spot.hit === true && spot.ship === false) {
-                let newArray = [0]
-                let finalArray = newArray.concat(array)
-                return finalArray
+            else if (newDirection === "right" && newattack.right != null) {
+                newattack = newattack.right
+            }
+            else if (newDirection === "left" && newattack.left != null) {
+                newattack = newattack.left
             }
             else {
-                let newArray = [1]
-                let finalArray = newArray.concat(array)
-                return finalArray
+                if (directionArray.length > 1) {
+                    directionArray.splice(random, 1)
+                }
+                else {
+                    directionArray.pop()
+                }
             }
         }
+        console.log("its going here!")
+        if (newattack === this.attacksShip[this.attacksShip.length -1] || newattack === null || newattack === undefined) {
+            let random = this.randomAttack()
+            newattack = realPlayer.playerGameBoard.find(random)
+            while (this.attacksShip.length > 0) {
+                this.attacksShip.pop()
+            }
+        }
+        let x = newattack.xAxis
+        let y = newattack.yAxis
+        return [x, y]
+    },
+    followAttacks () {
+        let random
+        let x
+        let y
+        let spot
+        let lastAttack = this.attacksShip[this.attacksShip.length - 1]
+        if (lastAttack.above != null && lastAttack.above.hit === true && lastAttack.above.ship === true && lastAttack.below != null) {
+            if (lastAttack.below.hit === true && lastAttack.below.ship === false) {
+                if (this.attacksShip[0].above != null && this.attacksShip[0].above.hit === false) {
+                    spot = this.attacksShip[0].above
+                }
+                else {
+                    random = this.randomAttack()
+                    spot = realPlayer.playerGameBoard.find(random)
+                    while (this.attacksShip.length > 0) {
+                        this.attacksShip.pop()  
+                    }
+                }
+            }
+            else if (lastAttack.below.hit === false) {
+                spot = lastAttack.below
+            }
+        }
+        else if (lastAttack.below != null && lastAttack.below.hit === true && lastAttack.below.ship === true && lastAttack.above != null) {
+            if (lastAttack.above.hit === true && lastAttack.above.ship === false) {
+                if (this.attacksShip[0].below != null && this.attacksShip[0].below.hit === false) {
+                    spot = this.attacksShip[0].below
+                }
+                else {
+                    random = this.randomAttack()
+                    spot = realPlayer.playerGameBoard.find(random)
+                    while (this.attacksShip.length > 0) {
+                        this.attacksShip.pop()  
+                    }
+                }
+            }
+            else if (lastAttack.above.hit === false) {
+                spot = lastAttack.above
+            }
+        }
+        else if (lastAttack.right != null && lastAttack.right.hit === true && lastAttack.right.ship === true && lastAttack.left != null) {
+            if (lastAttack.left.hit === true && lastAttack.left.ship === false) {
+                if (this.attacksShip[0].right != null && this.attacksShip[0].right.hit === false) {
+                    spot = this.attacksShip[0].right
+                }
+                else {
+                    random = this.randomAttack()
+                    spot = realPlayer.playerGameBoard.find(random)
+                    while (this.attacksShip.length > 0) {
+                        this.attacksShip.pop()  
+                    }
+                }
+            }
+            else if (lastAttack.left.hit === false) {
+                spot = lastAttack.left
+            }
+        }
+        else if (lastAttack.left != null && lastAttack.left.hit === true && lastAttack.left.ship === true && lastAttack.right != null) {
+            if (lastAttack.right.hit === true && lastAttack.right.ship === false) {
+                if (this.attacksShip[0].left != null && this.attacksShip[0].left.hit === false) {
+                    spot = this.attacksShip[0].left
+                }
+                else {
+                    random = this.randomAttack()
+                    spot = realPlayer.playerGameBoard.find(random)
+                    while (this.attacksShip.length > 0) {
+                        this.attacksShip.pop()  
+                    }
+                }
+            }
+            else if (lastAttack.right.hit === false) {
+                spot = lastAttack.right
+            }
+        }
+        else {
+            spot = realPlayer.playerGameBoard.find(this.attackNear())
+        }
+        x = spot.xAxis
+        y = spot.yAxis
+        let newattack = [x, y]
+        return newattack
     }
 }
 export {realPlayer}
