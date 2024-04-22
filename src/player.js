@@ -47,7 +47,7 @@ const computerPlayer  = {
             spot = realPlayer.playerGameBoard.find(newattack)
         }
         spot.hit = true
-        if (realPlayer.playerGameBoard.checkLoss() === true) {
+        if (realPlayer.playerGameBoard.receiveAttack(newattack) === true) {
             newArray = [true]
             let finalArray = newArray.concat(newattack)
             return finalArray
