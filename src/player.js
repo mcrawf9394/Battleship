@@ -34,7 +34,7 @@ const computerPlayer  = {
             newattack = this.attackNear()
             spot = realPlayer.playerGameBoard.find(newattack)
         }
-        else if (this.attacksShip.length <= this.attacksShip[0].shipType.length) {
+        else if (this.attacksShip.length <= this.attacksShip[0].shipType.length + 1) {
             newattack = this.followAttacks()
             spot = realPlayer.playerGameBoard.find(newattack)
         }

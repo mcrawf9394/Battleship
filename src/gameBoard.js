@@ -162,16 +162,16 @@ class gameBoard {
             if (spot.ship != false) {
                 needsNewSpot = true
             }
-            else if (spot.above != null && spot.above.ship != false && spot.above.shipType === spot.shipType) {
+            else if (spot.above != null && spot.above.ship != false && spot.above.shipType != spot.shipType) {
                 needsNewSpot = true
             }
-            else if (spot.below != null && spot.below.ship != false && spot.below.shipType === spot.shipType) {
+            else if (spot.below != null && spot.below.ship != false && spot.below.shipType != spot.shipType) {
                 needsNewSpot = true
             }
-            else if (spot.left != null && spot.left.ship != false && spot.left.shipType === spot.shipType) {
+            else if (spot.left != null && spot.left.ship != false && spot.left.shipType != spot.shipType) {
                 needsNewSpot = true
             }
-            else if (spot.right != null && spot.right.ship != false && spot.right.shipType === spot.shipType) {
+            else if (spot.right != null && spot.right.ship != false && spot.right.shipType != spot.shipType) {
                 needsNewSpot = true
             }
         })
