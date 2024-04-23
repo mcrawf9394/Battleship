@@ -1,19 +1,22 @@
 import './style.css';
 import { realPlayer } from './player';
 import { computerPlayer } from './player';
+import gameBoard from './gameBoard';
 const display = {
-    dialog () {
-        let dialog = document.getElementById('player1Dialog')
-        dialog.showModal()
-        let button = document.getElementById('player1Submit')
-        button.addEventListener('click', (click) => {
-            click.preventDefault()
-            let input = document.getElementById('player1Name')
-            let name = input.value
-            realPlayer.name = name
+    startGame () {
+        this.createUnclickableGrid()
+        this.createClickableGrids()
+        let message = document.createElement('h2')
+        message.textContent = "You have 5 ships to sink!"
+        let messageContainer = document.getElementById('finalMessage')
+        messageContainer.append(message)
+        let changeBoard = document.getElementById('randomizeBoard')
+        changeBoard.addEventListener('click', () => {
+            realPlayer.playerGameBoard = new gameBoard
+            while (document.getElementById('player1').firstChild) {
+                document.getElementById('player1').removeChild(document.getElementById('player1').firstChild)
+            }
             this.createUnclickableGrid()
-            this.createClickableGrids()
-            dialog.close()
         })
         return
     },
@@ -50,23 +53,55 @@ const display = {
                 newBox.id = i
                 newBox.className = "gridCells"
                 newBox.addEventListener('click', () => {
+                    if (document.getElementById('randomizeBoard')) {
+                        document.getElementById('randomizeBoard').remove()
+                    }
                     let x = parseInt(newBox.id)
                     let y = parseInt(newBox.value)
                     let array = [x, y]
                     let status = realPlayer.attack(array)
+                    newBox.disabled = true
                     if (status === true) {
                         newBox.className += "shipHit"
+                        let i = 0
+                        if (computerPlayer.playerGameBoard.carrier.sunk === true) {
+                            i = i + 1
+                        }
+                        if (computerPlayer.playerGameBoard.battleship.sunk === true) {
+                            i = i + 1
+                        }
+                        if (computerPlayer.playerGameBoard.cruiser.sunk === true) {
+                            i = i + 1
+                        }
+                        if (computerPlayer.playerGameBoard.submarine.sunk === true) {
+                            i = i + 1
+                        }
+                        if (computerPlayer.playerGameBoard.destroyer.sunk === true) {
+                            i = i + 1
+                        }
+                        i = 5 - i
+                        let message = document.querySelector('h2')
+                        if (i > 1) {
+                            message.textContent = "You have " + i +" ships to sink!"
+                        }
+                        else if (i === 1) {
+                            message.textContent = "You have 1 ship to go!"
+                        }
                     }
                     else if (status === null) {
                         newBox.name = "hit"
                         newBox.className += "shipHit"
-                        let messageContainer = document.getElementById('finalMessage')
-                        let message = document.createElement('h2')
+                        let message = document.querySelector('h2')
                         message.textContent = "You have won"
-                        messageContainer.append(message)
+                        let allButtons = document.querySelectorAll('button')
+                        allButtons.forEach(button => {
+                            button.disabled = true
+                        })
                         return
                     }
-                    newBox.disabled = true
+                    if (status === false) {
+                        newBox.className += "miss"
+                    }
                     let newArray = computerPlayer.attack()
                     let otherx = newArray[1].toString()
                     let othery = newArray[2].toString()
@@ -74,10 +109,12 @@ const display = {
                     if (newArray[0] === true) {
                         userGameBoard.name = "hit"
                         userGameBoard.className += "shipHit"
-                        let messageContainer = document.getElementById('finalMessage')
-                        let message = document.createElement('h2')
+                        let message = document.querySelector('h2')
                         message.textContent = "You have lost"
-                        messageContainer.append(message)
+                        let allButtons = document.querySelectorAll('button')
+                        allButtons.forEach(button => {
+                            button.disabled = true
+                        })
                     }
                     else if (newArray[0] === 1) {
                         userGameBoard.name = "hit"
@@ -93,4 +130,4 @@ const display = {
         return
     }
 }
-display.dialog()
+display.startGame()

@@ -75,7 +75,6 @@ const computerPlayer  = {
             newArray = [1]
         }
         let finalArray = newArray.concat(newattack)
-        console.log(this.attacksShip)
         return finalArray
     },
     randomAttack () {
@@ -114,7 +113,6 @@ const computerPlayer  = {
                 }
             }
         }
-        console.log("its going here!")
         if (newattack === this.attacksShip[this.attacksShip.length -1] || newattack === null || newattack === undefined) {
             let random = this.randomAttack()
             newattack = realPlayer.playerGameBoard.find(random)

@@ -235,7 +235,6 @@ class gameBoard {
     }
     checkLoss () {
         if (this.carrier.sunk === true && this.battleship.sunk === true && this.cruiser.sunk === true && this.submarine.sunk === true && this.destroyer.sunk === true) {
-            console.log("The other player has won!")
             return true
         }
         else {

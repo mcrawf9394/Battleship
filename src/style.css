@@ -3,18 +3,30 @@ html {
     min-width: 100%;
     margin: 0;
     padding: 0;
+    background-color: #3d3d4d;
 }
 h1 {
     text-align: center;
+    font-size: 3rem;
+    color: white;
+    font-family: monospace;
+}
+h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: white;
+    font-family: monospace;
 }
 :disabled {
     background-color: grey;
 }
 #centerOfPage {
     display: inline-flex;
-    margin-top: 10%;
+    margin-top: 3%;
     width: 100%;
-    height: 70vh;
+    height: 60vh;
+    background-color: white;
 }
 #player1, #player2 {
     display: grid;
@@ -23,7 +35,8 @@ h1 {
     grid-template-rows: repeat(10, 1fr);
     grid-template-columns:  repeat(10, 1fr);
     width: 30%;
-    height: 65%;
+    height: 90%;
+    margin-top: 1.5%;
 }
 button[name=ship] {
     background-color: green;
@@ -33,4 +46,14 @@ button[name=ship] {
 }
 .gridCellsmiss {
     background-color: aqua;
+}
+#randomizeBoard {
+    margin-left: 10%;
+    margin-top: 3rem;
+    width: 15rem;
+    height: 5rem;
+    font-size: 2rem;
+    border-radius: 5rem;
+    border-style: solid;   
+    font-family: monospace;
 }
