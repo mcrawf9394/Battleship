@@ -10,7 +10,9 @@ const display = {
         message.textContent = "You have 5 ships to sink!"
         let messageContainer = document.getElementById('finalMessage')
         messageContainer.append(message)
-        let changeBoard = document.getElementById('randomizeBoard')
+        let changeBoard = document.createElement('button') 
+        changeBoard.textContent = "Change Board"
+        changeBoard.id = 'randomizeBoard' 
         changeBoard.addEventListener('click', () => {
             realPlayer.playerGameBoard = new gameBoard
             while (document.getElementById('player1').firstChild) {
@@ -18,6 +20,8 @@ const display = {
             }
             this.createUnclickableGrid()
         })
+        let reset = document.getElementById('resets')
+        reset.appendChild(changeBoard)
         return
     },
     createUnclickableGrid () {
@@ -97,6 +101,25 @@ const display = {
                         allButtons.forEach(button => {
                             button.disabled = true
                         })
+                        let reset = document.getElementById('resets')
+                        let resetButton = document.createElement('button')
+                        resetButton.textContent = "Reset"
+                        resetButton.addEventListener('click', () => {
+                            let player1Grid = document.getElementById('player1')
+                            while (player1Grid.firstChild) {
+                                player1Grid.removeChild(player1Grid.firstChild)
+                            }
+                            let player2Grid = document.getElementById('player2')
+                            while (player2Grid.firstChild) {
+                                player2Grid.removeChild(player2Grid.firstChild)
+                            }
+                            let message = document.querySelector('h2')
+                            message.remove()
+                            resetButton.remove()
+                            this.startGame()
+                        })
+                        resetButton.id = "randomizeBoard"
+                        reset.appendChild(resetButton)
                         return
                     }
                     if (status === false) {
@@ -115,6 +138,25 @@ const display = {
                         allButtons.forEach(button => {
                             button.disabled = true
                         })
+                        let reset = document.getElementById('resets')
+                        let resetButton = document.createElement('button')
+                        resetButton.textContent = "Reset"
+                        resetButton.addEventListener('click', () => {
+                            let player1Grid = document.getElementById('player1')
+                            while (player1Grid.firstChild) {
+                                player1Grid.removeChild(player1Grid.firstChild)
+                            }
+                            let player2Grid = document.getElementById('player2')
+                            while (player2Grid.firstChild) {
+                                player2Grid.removeChild(player2Grid.firstChild)
+                            }
+                            let message = document.querySelector('h2')
+                            message.remove()
+                            resetButton.remove()
+                            this.startGame()
+                        })
+                        resetButton.id = "randomizeBoard"
+                        reset.appendChild(resetButton)
                     }
                     else if (newArray[0] === 1) {
                         userGameBoard.name = "hit"
